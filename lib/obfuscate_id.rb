@@ -9,20 +9,20 @@ module ObfuscateId
   end
 
   def self.hide(id)
-    ScatterSwap.hash(id)
+    ScatterSwap.hash(id, self.obfuscate_id_spin)
   end
 
   def self.show(id)
-    ScatterSwap.reverse_hash(id)
+    ScatterSwap.reverse_hash(id, self.obfuscate_id_spin)
   end
 
 
   module ClassMethods
-    def find(*args)
+    def find_by_obfuscated_id(*args)
       if has_obfuscated_id?
         args[0] = ObfuscateId.show(args[0])
       end
-      super(*args)
+      find(*args)
     end
 
     def has_obfuscated_id?
@@ -43,8 +43,9 @@ module ObfuscateId
   end
 
   module InstanceMethods
-    def to_param
-      ObfuscateId.hide(self.id)
+
+    def obfuscate_id
+      ObfuscateId.hide(self.id, self.class.obfuscate_id_spin)
     end
 
   end
