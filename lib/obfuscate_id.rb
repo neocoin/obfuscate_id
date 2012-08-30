@@ -15,8 +15,8 @@ module ObfuscateId
     end
 
     def find_by_obfuscated_id(obfuscated_id)
-      args[0] = reverse_obfuscated_id(obfuscated_id)
-      find(*args)
+      id = reverse_obfuscated_id(obfuscated_id)
+      find(id)
     end
 
     def has_obfuscated_id?
