@@ -9,10 +9,13 @@ module ObfuscateId
   end
 
   module ClassMethods
-    def find_by_obfuscated_id(*args)
-      if has_obfuscated_id?
-        args[0] = ScatterSwap.reverse_hash(args[0], self.obfuscate_id_spin)
-      end
+
+    def reverse_obfuscated_id(obf_id)
+      ScatterSwap.reverse_hash(obf_id, self.obfuscate_id_spin)
+    end
+
+    def find_by_obfuscated_id(obfuscated_id)
+      args[0] = reverse_obfuscated_id(obfuscated_id)
       find(*args)
     end
 
@@ -35,7 +38,7 @@ module ObfuscateId
 
   module InstanceMethods
 
-    def obfuscate_id
+    def obfuscated_id
       ScatterSwap.hash(self.id, self.class.obfuscate_id_spin)
     end
 
