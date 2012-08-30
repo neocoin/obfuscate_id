@@ -8,19 +8,10 @@ module ObfuscateId
     self.obfuscate_id_spin = (options[:spin] || obfuscate_id_default_spin)
   end
 
-  def self.hide(id)
-    ScatterSwap.hash(id, self.obfuscate_id_spin)
-  end
-
-  def self.show(id)
-    ScatterSwap.reverse_hash(id, self.obfuscate_id_spin)
-  end
-
-
   module ClassMethods
     def find_by_obfuscated_id(*args)
       if has_obfuscated_id?
-        args[0] = ObfuscateId.show(args[0])
+        args[0] = ScatterSwap.show(args[0], self.obfuscate_id_spin)
       end
       find(*args)
     end
@@ -45,7 +36,7 @@ module ObfuscateId
   module InstanceMethods
 
     def obfuscate_id
-      ObfuscateId.hide(self.id, self.class.obfuscate_id_spin)
+      ScatterSwap.hash(self.id, self.class.obfuscate_id_spin)
     end
 
   end
